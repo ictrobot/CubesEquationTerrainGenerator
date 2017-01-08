@@ -2,6 +2,7 @@ package ethanjones.cubes.equationterraingenerator;
 
 import ethanjones.cubes.block.Block;
 import ethanjones.cubes.core.id.IDManager;
+import ethanjones.cubes.core.logging.Log;
 import ethanjones.cubes.core.mod.Mod;
 import ethanjones.cubes.core.mod.ModEventHandler;
 import ethanjones.cubes.core.mod.event.PreInitializationEvent;
@@ -28,13 +29,20 @@ public class EquationTerrainGenerator {
     GeneratorManager.register("equationterraingenerator:equation", new TerrainGeneratorFactory() {
       @Override
       public TerrainGenerator getTerrainGenerator(SaveOptions saveOptions) {
-        return new Generator(saveOptions.worldSeedString);
+        return new Generator(saveOptions.worldSeedString, false);
+      }
+    });
+    GeneratorManager.register("equationterraingenerator:equationfilled", new TerrainGeneratorFactory() {
+      @Override
+      public TerrainGenerator getTerrainGenerator(SaveOptions saveOptions) {
+        return new Generator(saveOptions.worldSeedString, true);
       }
     });
   }
   
   public static class Generator extends TerrainGenerator {
     private final String eqn;
+    private final boolean filled;
     private ThreadLocal<Expression> expression = new ThreadLocal<Expression>() {
       @Override
       protected Expression initialValue() {
@@ -42,8 +50,10 @@ public class EquationTerrainGenerator {
       }
     };
     
-    public Generator(String eqn) {
+    public Generator(String eqn, boolean filled) {
       this.eqn = eqn;
+      this.filled = filled;
+      Log.info("Equation " + (filled ? "Filled " : "") + "Terrain Generator: " + eqn);
       try {
         ValidationResult validationResult = getExpression().validate(false);
         if (!validationResult.isValid()) throw new RuntimeException(String.valueOf(validationResult.getErrors()));
@@ -57,13 +67,21 @@ public class EquationTerrainGenerator {
       for (int x = 0; x < Area.SIZE_BLOCKS; x++) {
         for (int z = 0; z < Area.SIZE_BLOCKS; z++) {
           int y = height(x + area.minBlockX, z + area.minBlockZ);
-          if (y != -1) {
-            int meta = (y / 5) % 41;
-            if (meta > 20) meta = 40 - meta;
-            setVisible(area, block, x, y, z, meta);
+          if (filled) {
+            for (int i = y; i >= 0; i--) {
+              block(area, x, i, z);
+            }
+          } else {
+            if (y != -1) block(area, x, y, z);
           }
         }
       }
+    }
+    
+    private void block(Area area, int x, int y, int z) {
+      int meta = (y / 5) % 41;
+      if (meta > 20) meta = 40 - meta;
+      setVisible(area, block, x, y, z, meta);
     }
   
     @Override
