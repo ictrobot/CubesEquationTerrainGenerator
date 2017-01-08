@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        maven { url "http://ethanjones.me/maven/snapshots" }
+        maven { url "http://ethanjones.me/maven/releases" }
+    }
+    dependencies {
+        classpath "ethanjones.cubes:modplugin:0.0.1-SNAPSHOT"
+    }
+}
+apply plugin: 'java'
+apply plugin: 'cubes-mod'
+
+sourceSets.main.java.srcDirs = ["src/"]
+
+jar.from { configurations.includeInJar.collect { it.isDirectory() ? it : zipTree(it) } }
+
+cubes {
+    cubesVersion = '0.0.5-SNAPSHOT'
+    modVersion = '1.0'
+    modClass = 'ethanjones.cubes.equationterraingenerator.EquationTerrainGenerator'
+    modName = 'EquationTerrainGenerator'
+    buildAndroid = false
+}
+
+configurations {
+    includeInJar
+    compile.extendsFrom(includeInJar)
+}
+
+dependencies {
+    includeInJar "net.objecthunter:exp4j:0.4.7"
+}

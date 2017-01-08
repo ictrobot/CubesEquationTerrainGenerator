@@ -1,0 +1,35 @@
+[
+  {
+    "id": "equationterraingenerator:block",
+    "meta": 21,
+    "texture": {
+      "0": "equationterraingenerator:block0",
+      "1": "equationterraingenerator:block1",
+      "2": "equationterraingenerator:block2",
+      "3": "equationterraingenerator:block3",
+      "4": "equationterraingenerator:block4",
+      "5": "equationterraingenerator:block5",
+      "6": "equationterraingenerator:block6",
+      "7": "equationterraingenerator:block7",
+      "8": "equationterraingenerator:block8",
+      "9": "equationterraingenerator:block9",
+      "10": "equationterraingenerator:block10",
+      "11": "equationterraingenerator:block11",
+      "12": "equationterraingenerator:block12",
+      "13": "equationterraingenerator:block13",
+      "14": "equationterraingenerator:block14",
+      "15": "equationterraingenerator:block15",
+      "16": "equationterraingenerator:block16",
+      "17": "equationterraingenerator:block17",
+      "18": "equationterraingenerator:block18",
+      "19": "equationterraingenerator:block19",
+      "20": "equationterraingenerator:block20"
+    },
+    "displayMeta": [],
+    "mining": {
+      "speed": 1,
+      "tool": "none",
+      "other": false
+    }
+  }
+]
