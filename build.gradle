@@ -4,7 +4,7 @@ buildscript {
         maven { url "http://ethanjones.me/maven/releases" }
     }
     dependencies {
-        classpath "ethanjones.cubes:modplugin:0.0.1-SNAPSHOT"
+        classpath "ethanjones.cubes:modplugin:0.0.1"
     }
 }
 apply plugin: 'java'
@@ -19,7 +19,6 @@ cubes {
     modVersion = '1.0'
     modClass = 'ethanjones.cubes.equationterraingenerator.EquationTerrainGenerator'
     modName = 'EquationTerrainGenerator'
-    buildAndroid = false
 }
 
 configurations {

@@ -28,6 +28,7 @@ public class EquationTerrainGenerator {
   @ModEventHandler
   public void preInit(PreInitializationEvent event) {
     block = IDManager.toBlock("equationterraingenerator:block");
+    
     GeneratorManager.register("equationterraingenerator:equation", new TerrainGeneratorFactory() {
       @Override
       public TerrainGenerator getTerrainGenerator(SaveOptions saveOptions) {
@@ -49,8 +50,9 @@ public class EquationTerrainGenerator {
   }
   
   public static abstract class Generator extends TerrainGenerator {
-    protected final String[] eqn;
-    protected ThreadLocal<Expression[]> expressionThreadLocal = new ThreadLocal<Expression[]>() {
+    final String[] eqn;
+    
+    ThreadLocal<Expression[]> expressionThreadLocal = new ThreadLocal<Expression[]>() {
       @Override
       protected Expression[] initialValue() {
         Expression[] expressions = new Expression[eqn.length];
@@ -61,7 +63,7 @@ public class EquationTerrainGenerator {
       }
     };
     
-    public Generator(String eqn) {
+    Generator(String eqn) {
       Log.info("Equation Terrain " + getClass().getSimpleName() + ": " + eqn);
       this.eqn = eqn.split(Pattern.quote("|"));
       try {
@@ -74,7 +76,7 @@ public class EquationTerrainGenerator {
       }
     }
     
-    protected void block(Area area, int x, int y, int z) {
+    void block(Area area, int x, int y, int z) {
       int meta = (y / 5) % 41;
       if (meta > 20) meta = 40 - meta;
       set(area, block, x, y, z, meta);
@@ -96,11 +98,11 @@ public class EquationTerrainGenerator {
       return new BlockReference().setFromBlockCoordinates(0, y + 2, 0);
     }
     
-    protected Expression getExpression(String eqn) {
+    Expression getExpression(String eqn) {
       return new ExpressionBuilder(eqn).variable("x").variable("z").build();
     }
     
-    protected int height(Expression e, int x, int z) {
+    int height(Expression e, int x, int z) {
       try {
         e.setVariable("x", x);
         e.setVariable("z", z);
@@ -114,7 +116,7 @@ public class EquationTerrainGenerator {
   
   public static class NormalGenerator extends Generator {
     
-    public NormalGenerator(String eqn) {
+    NormalGenerator(String eqn) {
       super(eqn);
     }
     
@@ -135,7 +137,7 @@ public class EquationTerrainGenerator {
   
   public static class FilledGenerator extends Generator {
     
-    public FilledGenerator(String eqn) {
+    FilledGenerator(String eqn) {
       super(eqn);
     }
     
@@ -150,7 +152,7 @@ public class EquationTerrainGenerator {
             for (int i = y; i >= minHeight; i--) {
               block(area, x, i, z);
             }
-            if (y > minHeight) y = minHeight + 1;
+            if (y > minHeight) minHeight = y + 1;
           }
         }
       }
@@ -160,7 +162,7 @@ public class EquationTerrainGenerator {
   
   public static class DifferenceGenerator extends Generator {
     
-    public DifferenceGenerator(String eqn) {
+    DifferenceGenerator(String eqn) {
       super(eqn);
     }
     
